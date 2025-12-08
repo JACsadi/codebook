@@ -38,3 +38,21 @@ ll bfs(int n) {
     }
     return maxflow;
 }
+
+// call after getting max flow 
+vector<int> getCut(int n) {
+    vector<int> vis(510,0);
+    queue<int> q;
+    q.push(1);
+    vis[1] = 1;
+    while(!q.empty()) {
+        int u = q.front(); q.pop();
+        for(int v : graph[u].adj) {
+            if(!vis[v] && graph[u].cap[v] > 0) {  // residual capacity
+                vis[v] = 1;
+                q.push(v);
+            }
+        }
+    }
+    return vis;  // vis[v] = 1 -> reachable -> S-side
+}
