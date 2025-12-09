@@ -1,17 +1,3 @@
-#include <bits/stdc++.h>
-using namespace std;
-#ifdef ONLINE_JUDGE
-#define debug(...)
-#endif
-#define ll long
-#define ull unsigned long
-#define f(i, n) for(int i = 0; i < (n); i++)
-#define sd(i) scanf("%d", &i)
-#define tcase int t; sd(t); for(int casee = 1; casee <= t; casee++)
-#define en printf("\n")
-#define mod 1000000007
-using namespace std;
-
 struct FlowEdge {
     int v, u;
     int cap, flow = 0;
