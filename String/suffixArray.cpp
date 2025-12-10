@@ -1,154 +1,77 @@
-void count_sort(vector<int> &p, vector<int> &c) {
-   int n = size(p);
-   vector<int> cnt(n);
-   for (auto x: c) {
-      cnt[x]++;
-   }
-   vector<int> p_new(n);
-   vector<int> pos(n);
-   pos[0] = 0;
-   for (int i = 1; i < n; ++i) {
-      pos[i] = pos[i - 1] + cnt[i - 1];
-   }
-   for (auto x: p) {
-      int i = c[x];
-      p_new[pos[i]] = x;
-      pos[i]++;
-   }
-   p = p_new;
-}
-vector<int> findSA(string s) {
-   int n = size(s);
-   vector<int> p(n), c(n);
-   {
-     //k = 0
-      vector<pair<char, int>> a(n);
-      for (int i = 0; i < n; ++i) a[i] = {s[i], i};
-      sort(a.begin(), a.end());
-  
-      for (int i = 0; i < n; ++i) p[i] = a[i].second;
-      c[p[0]] = 0;
-      for (int i = 1; i < n; ++i) {
-         if (a[i].first == a[i - 1].first) {
-         c[p[i]] = c[p[i - 1]];
-         } else {
-            c[p[i]] = c[p[i - 1]] + 1;
-         }
-      }
-   }
-   int k = 0;
-   while ((1 << k) < n) {
-    // k -> k + 1
-      for (int i = 0; i < n; ++i) {
-         p[i] = (p[i] - (1 << k) + n) % n;
-      }
-      count_sort(p, c);
-      vector<int> c_new(n);
-      c_new[p[0]] = 0;
-      for (int i = 1; i < n; ++i) {
-         pair<int, int> prev = {c[p[i - 1]], c[(p[i - 1] + (1 << k)) % n]};
-         pair<int, int> now = {c[p[i]], c[(p[i] + (1 << k)) % n]};
-         if (now == prev) {
-            c_new[p[i]] = c_new[p[i - 1]];
-         } else {
-            c_new[p[i]] = c_new[p[i - 1]] + 1;
-         }
-      }
-      c = c_new;
-      k++;
-   }
-   return p;
-}
-void solve() {
-   string s; cin >> s;
-   // long long ck; cin >> ck;
-   s = s + "$";
-   int n = size(s);
-   vector<int> p(n), c(n);
-   {
-     //k = 0
-      vector<pair<char, int>> a(n);
-      for (int i = 0; i < n; ++i) a[i] = {s[i], i};
-      sort(a.begin(), a.end());
-  
-      for (int i = 0; i < n; ++i) p[i] = a[i].second;
-      c[p[0]] = 0;
-      for (int i = 1; i < n; ++i) {
-         if (a[i].first == a[i - 1].first) {
-         c[p[i]] = c[p[i - 1]];
-         } else {
-            c[p[i]] = c[p[i - 1]] + 1;
-         }
-      }
-   }
-   int k = 0;
-   while ((1 << k) < n) {
-    // k -> k + 1
-      for (int i = 0; i < n; ++i) {
-         p[i] = (p[i] - (1 << k) + n) % n;
-      }
-      count_sort(p, c);
-      vector<int> c_new(n);
-      c_new[p[0]] = 0;
-      for (int i = 1; i < n; ++i) {
-         pair<int, int> prev = {c[p[i - 1]], c[(p[i - 1] + (1 << k)) % n]};
-         pair<int, int> now = {c[p[i]], c[(p[i] + (1 << k)) % n]};
-         if (now == prev) {
-            c_new[p[i]] = c_new[p[i - 1]];
-         } else {
-            c_new[p[i]] = c_new[p[i - 1]] + 1;
-         }
-      }
-      c = c_new;
-      k++;
-   }
-   // for (int i : p) cout << i << ' '; cout << endl;
-  
-   // finding lcp..
-   vi lcp(n-1);
-   k = 0;
-   for (int i = 0; i < n-1; i++) {
-      int ps = c[i];
-      int j = p[ps-1];
-      while(s[i+k] == s[j+k]) k++;
-      lcp[ps-1] = k;
-      k = max(k-1, 0);
-   }
-   // for (int i : lcp) cout << i << ' '; cout << endl;
- 
-   // for (int i = 0; i < n; i++) {
-   //    cout << p[i] << ' ' << s.substr(p[i]) << endl;
-   // } cout << endl;
- 
- 
- 
-   vector<int> pre(n + 5, 0);
-   for (int i = 1; i < n; i++) {
-      int lc = lcp[i-1];
-      // cout << lcp[i-1] << ' ' << n-p[i] << endl;
-      pre[lcp[i-1]+1]++;
-      pre[n-p[i]]--;
-   }
-   for (int i = 1; i <= n; i++) pre[i] += pre[i-1];
-   for (int i = 1; i < n; i++) cout << pre[i] << ' ';
-   // string ans;
-   // for (int i = 1; i < n; i++) {
-   //    long long pp = n - p[i] - 1 - lcp[i-1];
-   //    if(pp >= ck) {
-   //       ans = s.substr(p[i], ck + lcp[i-1]);
-   //       break;
-   //    }
-   //    ck -= pp;
-   // }
-   // cout << ans << endl;
-}
- 
-int32_t main() {
-   IO;
-   int TestCase = 1;
-   // cin >> TestCase;
-   while(TestCase--)
-      solve();
-   
-   return 0;
+#include<bits/stdc++.h>
+using namespace std;
+
+struct SuffixArray {
+    int n;
+    string s;
+    vector<int> sa, rankv, tmp, lcp;
+
+    SuffixArray(const string &str) {
+        s = str;
+        n = s.size();
+        sa.resize(n);
+        rankv.resize(n);
+        tmp.resize(n);
+        build();
+        build_lcp();
+    }
+
+    void counting_sort(int k) {
+        int maxi = max(256ll, (long long)n) + 5;
+        vector<int> cnt(maxi, 0), sa2(n);
+        for (int i = 0; i < n; i++) {
+            int key = (i + k < n) ? rankv[i + k] + 1 : 0;
+            cnt[key]++;
+        }
+        for (int i = 1; i < maxi; i++) cnt[i] += cnt[i - 1];
+        for (int i = n - 1; i >= 0; i--) {
+            int key = (sa[i] + k < n) ? rankv[sa[i] + k] + 1 : 0;
+            sa2[--cnt[key]] = sa[i];
+        }
+        sa.swap(sa2);
+    }
+
+    void build() {
+        for (int i = 0; i < n; i++) {
+            sa[i] = i;
+            rankv[i] = (unsigned char)s[i];
+        }
+        for (int k = 1; k < n; k <<= 1) {
+            counting_sort(k);
+            counting_sort(0);
+            tmp[sa[0]] = 0;
+            int r = 0;
+            for (int i = 1; i < n; i++) {
+                int cur1 = rankv[sa[i]], cur2 = (sa[i] + k < n ? rankv[sa[i] + k] : -1);
+                int prev1 = rankv[sa[i - 1]], prev2 = (sa[i - 1] + k < n ? rankv[sa[i - 1] + k] : -1);
+                if (cur1 != prev1 || cur2 != prev2) r++;
+                tmp[sa[i]] = r;
+            }
+            rankv.swap(tmp);
+            if (r == n - 1) break;
+        }
+    }
+
+    void build_lcp() {
+        lcp.assign(max(0, n - 1), 0);
+        vector<int> inv(n);
+        for (int i = 0; i < n; ++i) inv[sa[i]] = i;
+        int k = 0;
+        for (int i = 0; i < n; ++i) {
+            if (inv[i] == n - 1) { k = 0; continue; }
+            int j = sa[inv[i] + 1];
+            while (i + k < n && j + k < n && s[i + k] == s[j + k]) ++k;
+            lcp[inv[i]] = k;
+            if (k) --k;
+        }
+    }
+};
+
+void solve(const string &s, const string &t) {
+    // build local combined string so we don't mutate inputs
+    int n = s.size();
+    string combined = s + '$' + t;
+    int N = combined.size();
+
+    SuffixArray sa(combined);
 }
