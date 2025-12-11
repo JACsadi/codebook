@@ -6,28 +6,24 @@ struct Query {
     bool operator<(const Query &y) const {
         int x_block = l / BLOCK_SIZE;
         int y_block = y.l/BLOCK_SIZE;
-        if(x_block == y_block) 
+        if(x_block == y_block)
             return r < y.r;
         return x_block < y_block;
     }
 };
-
 void add(int i) {
     int x = ar[i];
     res -= freq[x] / 2;
     freq[x]++;
     res += freq[x] / 2;
 }
-
 void Remove(int i) {
     int x = ar[i];
     res -= freq[x] / 2;
     freq[x]--;
     res += freq[x] / 2;
 }
-
 void solve() {
-
     cin >> n;
     for (int i = 1; i <= n; i++) cin >> ar[i];
     cin >> q;
@@ -57,6 +53,5 @@ void solve() {
         }
         ans[q.id] = res;
     }
-    for (int i = 0; i < ii; i++) cout << ans[i] << "\n"; 
-
+    for (int i = 0; i < ii; i++) cout << ans[i] << "\n";
 }

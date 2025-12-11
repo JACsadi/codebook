@@ -23,7 +23,7 @@ void solve() {
       if((a1-a2) % g != 0) {
          cout << "Impossible" << endl;
          return;
-      } 
+      }
       __int128 k = (a1-a2) / g, lcm = (m1/g) * m2;
       __int128 a = a1 - m1*(k * x);
       a1 = (a % lcm);

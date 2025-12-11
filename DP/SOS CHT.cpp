@@ -1,10 +1,8 @@
 const int N = 3e5 + 9;
 const int mod = 1e9 + 7;
-
 struct CHT {
   vector<ll> m, b;
   int ptr = 0;
-
   bool bad(int l1, int l2, int l3) {
     return 1.0 * (b[l3] - b[l1]) * (m[l1] - m[l2])  <= 1.0 * (b[l2] - b[l1]) * (m[l1] - m[l3]); //(slope dec+query min),(slope inc+query max)
     return 1.0 * (b[l3] - b[l1]) * (m[l1] - m[l2])  > 1.0 * (b[l2] - b[l1]) * (m[l1] - m[l3]); //(slope dec+query max), (slope inc+query min)
@@ -29,7 +27,6 @@ struct CHT {
     while(ptr < m.size() - 1 && f(ptr + 1, x) < f(ptr, x)) ptr++;
     return f(ptr, x);
   }
-
   ll bs(int l, int r, ll x) {
     int mid = (l + r) / 2;
     if(mid + 1 < m.size() && f(mid + 1, x) < f(mid, x)) return bs(mid + 1, r, x); // > for max
@@ -37,13 +34,11 @@ struct CHT {
     return f(mid, x);
   }
 };
-
 ll a[N], b[N];
 CHT cht;
 int32_t main() {
   ios_base::sync_with_stdio(0);
   cin.tie(0);
-
   int n;
   cin >> n;
   for(int i = 0; i < n; i++) cin >> a[i];
@@ -57,7 +52,6 @@ int32_t main() {
   cout << ans << nl;
   return 0;
 }
-
 // SOS
 const int B = 20;
 int a[1 << B], f[1 << B], g[1 << B];
@@ -70,7 +64,6 @@ int32_t main() {
     f[a[i]]++;
     g[a[i]]++;
   }
-
   // sum over subsets
   for (int i = 0; i < B; i++) {
     for (int mask = 0; mask < (1 << B); mask++) {
@@ -79,14 +72,12 @@ int32_t main() {
       }
     }
   }
-
   // sum over supersets
   for (int i = 0; i < B; i++) {
     for (int mask = (1 << B) - 1 ; mask >= 0 ; mask--) {
       if ((mask & (1 << i)) == 0) g[mask] += g[mask ^ (1 << i)] ;
     }
   }
-  
   for (int i = 1; i <= n; i++) {
     cout << f[a[i]] << ' ' << g[a[i]] << ' ' << n - f[(1 << B) - 1 - a[i]] << '\n';
   }

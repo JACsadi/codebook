@@ -2,27 +2,22 @@
 // cht-(general in query, not in insertion)
 struct line {
     int m, c;
-
     line(int _m, int _c) : m(_m), c(_c) {
     }
-
     ld intersection(line l) {
         ld top = l.c - c;
         ld bottom = m - l.m;
         return top / bottom;
     }
-
     int get_val(int x) {
         return m * x + c;
     }
 };
-
 // to get minimum value
 // slope of line added is in decreasing order
 // query asked is in increasing order/ random order
 struct cht {
     deque<pair<line, ld>> dq;
-
     void insert(line l) {
         if (!dq.empty() && dq.back().first.m == l.m) {
             if (dq.back().first.c <= l.c) return;
@@ -48,7 +43,6 @@ struct cht {
             dq.pop_front();
         return dq[0].first.get_val(x);
     }
-
     // query general
     int queryG(int x) {
         int l = 0, r = sz(dq);

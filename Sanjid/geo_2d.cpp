@@ -770,29 +770,6 @@ double maximum_dist_from_polygon_to_polygon(vector<PT> &u, vector<PT> &v){ //O(n
     }
     return sqrt(ans);
 }
-// contains all points p such that: cross(b - a, p - a) >= 0
-struct HP {
-    PT a, b;
-    HP() {}
-    HP(PT a, PT b) : a(a), b(b) {}
-    HP(const HP& rhs) : a(rhs.a), b(rhs.b) {}
-    int operator < (const HP& rhs) const {
-        PT p = b - a;
-        PT q = rhs.b - rhs.a;
-        int fp = (p.y < 0 || (p.y == 0 && p.x < 0));
-        int fq = (q.y < 0 || (q.y == 0 && q.x < 0));
-        if (fp != fq) return fp == 0;
-        if (cross(p, q)) return cross(p, q) > 0;
-        return cross(p, rhs.b - a) < 0;
-    }
-    PT line_line_intersection(PT a, PT b, PT c, PT d) {
-        b = b - a; d = c - d; c = c - a;
-        return a + b * cross(c, d) / cross(b, d);
-    }
-    PT intersection(const HP &v) {
-        return line_line_intersection(a, b, v.a, v.b);
-    }
-};
 
 // rotate the polygon such that the (bottom, left)-most point is at the first position
 void reorder_polygon(vector<PT> &p) {

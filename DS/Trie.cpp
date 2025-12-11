@@ -1,5 +1,4 @@
 const int N = 3e5 + 9;
-
 struct Trie {
   static const int B = 31;
   struct node {

@@ -46,11 +46,9 @@ struct XorBasis {
         ll sz = size();
         if (k > (1LL << sz)) return -1;
         k--;
-
         ll ans = 0;
         for (ll i = 0; i < sz; i++)
             if (k >> (sz - 1 - i) & 1) ans ^= basis[i];
-
         return ans;
     }
 } xb;

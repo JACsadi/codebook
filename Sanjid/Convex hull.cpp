@@ -1,7 +1,5 @@
 struct point{
     int x,y;
-
-
 };
 bool operator < (const point &q,const point &p)
 {
@@ -12,7 +10,6 @@ bool operator ==(const point &a,const point &b)
 {
     return a.x==b.x && b.y==a.y;
 }
-
 bool c_w(point a,point b,point c)
 {
     return a.x*(b.y-c.y)+b.x*(c.y-a.y)+c.x*(a.y-b.y) >0;
@@ -33,7 +30,6 @@ void convex_hull(vector<point>&p) {
     vector<point> up, down;
     up.pb(p[0]);
     down.pb(p[0]);
-
     point p1 = p[0]; //bottom left
     point p2 = p[n - 1]; // top right
     for (int i = 1; i < n; i++) {
